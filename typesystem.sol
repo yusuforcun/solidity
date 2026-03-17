@@ -167,6 +167,41 @@ contract TypeLabs {
 
     allUsers.push(u) ;
    }
+   /* TYPE CASTİNG*/
+       function addressToUint(address _addr) external pure returns (uint256) {
+        return uint256(uint160(_addr));
+    }
+
+    // bytes32 -> bytes4 (ilk 4 byte'ı almak gibi)
+    function getFirst4Bytes(bytes32 _data) external pure returns (bytes4) {
+        return bytes4(_data);
+    }
+
+    // uint8 -> uint256 (küçükten büyüğe, güvenli)
+    function upcastUint8ToUint256(uint8 _x) external pure returns (uint256) {
+        uint256 y = _x; // implicit cast
+        return y;
+    }
+
+    // uint256 -> uint8 (büyükten küçüğe, veri kaybı RISKI)
+    function downcastUint256ToUint8(uint256 _x) external pure returns (uint8) {
+        // Eğer _x > 255 ise veri kaybı olur, mod 256 alınır.
+        return uint8(_x);
+    }
+
+    /*ADDRESS PAYABLE*/
+     function setPayableAddress(address payable _addr) external {
+        payableAddress = _addr;
+    }
+
+    // Sadece örnek amaçlı, production için re-entrancy önlemleri gerekir.
+    function sendEther(uint256 amount) external {
+        require(address(this).balance >= amount, "Insufficient balance");
+
+        // modern yaklaşım: call{value: amount}("")
+        (bool success, ) = payableAddress.call{value: amount}("");
+        require(success, "ETH transfer failed");
+    }
 
 
 }
