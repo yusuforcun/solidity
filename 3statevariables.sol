@@ -57,3 +57,18 @@ contract Solve2 {
 
 }
 
+bytes32 baseSlot = keccak256(abi.encode(msg.sender, uint256(0)));
+
+slot 0: balance (16) | debt (16)
+slot 1: isActive (1) | padding (31)
+
+function readUser(address user) public view returns (uint128 balance, uint128 debt, bool isActive) {
+    bytes32 baseSlot = keccak256(abi.encode(user, uint256(0)));
+
+    assembly {
+        let slotData := sload(baseSlot)
+        balance := shr(128, slotData)        // üst 16 byte
+        debt := and(slotData, 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF) // alt 16 byte
+        isActive := sload(add(baseSlot, 1)) // yeni slot
+    }
+}
