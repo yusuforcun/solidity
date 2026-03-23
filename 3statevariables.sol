@@ -32,3 +32,28 @@ contract Solve {
     uint128 public c ;
     uint256 public b ;
 }
+
+contract Test {
+    struct Data {
+        uint64 a;
+        uint64 b;
+        uint256 c;
+        bool d;
+    }
+
+    mapping(address => Data) public data;
+    
+}
+
+contract Solve2 {
+    struct Data {
+        uint256 c ;
+        uint64 a ;
+        uint64 b ;
+        bool d ;
+    }
+
+    mapping (address => Data ) public data ;
+
+}
+
